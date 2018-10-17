@@ -27,7 +27,8 @@
 		NSLog(@"Successfully loaded - %@", request.URL);
 		NSLog(@"Successfully Redirected to  - %@", newRequest.URL);
 		
-		
+		NSLog(@"Cookies after handling :");
+		[self printCookies];
 		dispatch_async(dispatch_get_main_queue(), ^{
 //
 //			[self syncCookiesInJS: nil];
@@ -102,6 +103,7 @@
 		}
 		
 	}];
+	
 	[task resume];
 }
 
@@ -111,7 +113,6 @@
 	NSMutableArray <NSHTTPCookie *> *cookiesArray = [NSMutableArray new];
 	if (task){
 		[[NSHTTPCookieStorage sharedHTTPCookieStorage] getCookiesForTask: task completionHandler:^(NSArray<NSHTTPCookie *> * _Nullable cookies) {
-			
 			if (cookies) {
 				[cookiesArray addObjectsFromArray:cookies];
 				
@@ -165,6 +166,20 @@
 	if (mine == nil) mine = @"text/html";
 	
 	return [self loadData:data MIMEType:mine characterEncodingName:encode baseURL:response.URL];
+}
+
+
+
+
+- (void)URLSession:(NSURLSession *)session task:(nonnull NSURLSessionTask *)task willPerformHTTPRedirection:(nonnull NSHTTPURLResponse *)response newRequest:(nonnull NSURLRequest *)request completionHandler:(nonnull void (^)(NSURLRequest * _Nullable))completionHandler {
+	
+	NSLog(@"Will redirect!");
+	[self syncCookiesRequest:request task:task completion:^(NSURLRequest * newRequest) {
+		NSLog(@"New Request - %@",newRequest);
+		NSLog(@"cookies - %@", newRequest.allHTTPHeaderFields);
+		completionHandler(newRequest);
+	}];
+	
 }
 
 
