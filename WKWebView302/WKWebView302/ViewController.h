@@ -11,6 +11,7 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)reloadPageClicked:(id)sender;
 
 @end
 

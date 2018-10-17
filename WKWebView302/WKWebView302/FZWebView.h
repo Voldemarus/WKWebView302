@@ -13,6 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FZWebView : WKWebView
 
+// overriden method
+- (nullable WKNavigation *)loadRequest:(NSURLRequest *)request;
+
+// delete cookies for given URL
+- (void) resetCookis:(NSURL *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

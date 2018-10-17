@@ -18,29 +18,71 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fhM-G8-xj4" customClass="FZWebView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="611"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cookie processing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gu-Kt-dp8">
+                                <rect key="frame" x="16" y="25" width="142" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="0ou-PP-aai"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="142" id="QtH-AW-FCV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vfP-Y3-QEI">
+                                <rect key="frame" x="183" y="20" width="49" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="47" id="p7A-r2-b6I"/>
+                                    <constraint firstAttribute="height" constant="31" id="zAE-7t-ySF"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="modeSwitchChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="9du-Q5-sbl"/>
+                                </connections>
+                            </switch>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p3i-K9-yfw">
+                                <rect key="frame" x="289" y="9" width="46" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="Shh-KT-GCd"/>
+                                    <constraint firstAttribute="width" constant="46" id="qUz-LA-8bD"/>
+                                </constraints>
+                                <state key="normal" image="reloadIcon"/>
+                                <connections>
+                                    <action selector="reloadPageClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Nim-sH-FfI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="vfP-Y3-QEI" firstAttribute="leading" secondItem="0Gu-Kt-dp8" secondAttribute="trailing" constant="25" id="0zh-RH-qjl"/>
+                            <constraint firstItem="0Gu-Kt-dp8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="5" id="9ey-6l-RXK"/>
                             <constraint firstItem="fhM-G8-xj4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="A5k-1C-QsF"/>
+                            <constraint firstItem="vfP-Y3-QEI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="M6z-Je-DfI"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="fhM-G8-xj4" secondAttribute="bottom" id="Syw-DR-CT9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fhM-G8-xj4" secondAttribute="trailing" id="Y2o-Tr-b4f"/>
-                            <constraint firstItem="fhM-G8-xj4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="xzG-Gb-ZY5"/>
+                            <constraint firstItem="p3i-K9-yfw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-11" id="Yjh-aq-N7i"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="p3i-K9-yfw" secondAttribute="trailing" constant="40" id="ZqC-xt-Jk2"/>
+                            <constraint firstItem="0Gu-Kt-dp8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="pAg-tz-vi0"/>
+                            <constraint firstItem="fhM-G8-xj4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="36" id="xzG-Gb-ZY5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="modeSwitch" destination="vfP-Y3-QEI" id="gxb-Ut-9n1"/>
                         <outlet property="webView" destination="fhM-G8-xj4" id="jCs-xL-dR4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="53.600000000000001" y="26.53673163418291"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="reloadIcon" width="48" height="48"/>
+    </resources>
 </document>
