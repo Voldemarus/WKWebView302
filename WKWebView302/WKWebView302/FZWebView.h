@@ -13,6 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FZWebView : WKWebView
 
+- (instancetype) initAsSubViewFor:(UIView *)parentView withProcessPool:(WKProcessPool *) processPool;
+
+
+- (void) loadURL:(NSURL *)url;
+
 // overriden method
 - (nullable WKNavigation *)loadRequest:(NSURLRequest *)request;
 

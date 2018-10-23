@@ -9,11 +9,104 @@
 #import "FZWebView.h"
 #import "AppDelegate.h"
 
-@interface FZWebView () <NSURLSessionDelegate>
+@interface FZWebView () <NSURLSessionDelegate, WKNavigationDelegate>
+{
+	WKWebViewConfiguration *configuration;
+	NSHTTPCookieStorage *sharedCookieStorage;
+}
 
 @end
 
 @implementation FZWebView
+
+
+- (instancetype) initAsSubViewFor:(UIView *)parentView withProcessPool:(WKProcessPool *) processPool;
+{
+	CGSize frameSize = parentView.frame.size;
+	WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+	config.processPool = processPool;
+	if (self = [super initWithFrame:CGRectMake(0.0, 0.0, frameSize.width, frameSize.height) configuration:config]) {
+		configuration = config;
+		self.navigationDelegate = self;
+		self.translatesAutoresizingMaskIntoConstraints = NO;
+		[parentView addSubview:self];
+		
+		//
+		// Set up constraintsfor embedded WKWebView to prevent annoying warnings due to incorrect
+		// default constraints settings
+		//
+		NSDictionary *views = @{
+								 @"webView"	:	self,
+								 };
+		
+		NSArray *constH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[webView]|"
+						 options:0 metrics:nil views:views];
+		[parentView addConstraints:constH];
+		NSArray *constV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[webView]|"
+																  options:0 metrics:nil views:views];
+		[parentView addConstraints:constV];
+
+		sharedCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	}
+	return self;
+}
+
+
+//
+// External method to initiate "proper loading"
+//
+- (void) loadURL:(NSURL *)url
+{
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+	// clean old cookies related to this URL
+	[self resetCookis:url];
+	NSArray *oldCookies = sharedCookieStorage.cookies;
+	NSDictionary *cookiesDict = [NSHTTPCookie requestHeaderFieldsWithCookies:oldCookies];
+	
+	// Add all remained cookies to the request
+	request.allHTTPHeaderFields = cookiesDict;
+	
+	// remove all previous user' scripits if any
+	[self.configuration.userContentController removeAllUserScripts];
+	// set up new script, which defines document's cookies
+	[self.configuration.userContentController addUserScript:[self cookieInjectionScript]];
+	// Start internal method to proceed with cookies
+	[self loadRequest:request];
+}
+
+
+//
+// Convert Cookies dictionary in share storage to JS format
+//
+- (WKUserScript *) cookieInjectionScript
+{
+	NSMutableString *source = [NSMutableString new];
+	NSArray *allCookies = sharedCookieStorage.cookies;
+	for (NSHTTPCookie *cookie in allCookies) {
+		[source appendFormat:@"document.cookie = '%@=%@; path=%@; domain=%@'\n",
+		 cookie.name, cookie.value, cookie.path, cookie.domain];
+	}
+	return [[WKUserScript alloc] initWithSource:source injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+}
+
+
+#pragma mark - WKNavigationDelegate
+
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
+{
+	NSURL *url = webView.URL;
+	
+	NSLog(@" >>> URL - %@",url);
+	NSArray *cookies = sharedCookieStorage.cookies;
+	for (NSHTTPCookie *cookie in cookies) {
+		NSLog(@">> %@  %@::  %@ -> %@",cookie.domain, (cookie.sessionOnly ? @"+TMP+" : @""),
+			  cookie.name, cookie.value);
+	}
+}
+
+
+
+
 
 - (nullable WKNavigation *)loadRequest:(NSURLRequest *)request
 {
