@@ -10,7 +10,7 @@
 #define Definitions_h
 
 
-#define TEST_PAGE	@"https://www.mytoys.ru/product/7632374?sku=7632379"
+#define TEST_PAGE	@"https://www.mytoys.ru/product/10023651?sku=10023651"
 
 #define TIMEOUT_INTERVAL	30.0
 
